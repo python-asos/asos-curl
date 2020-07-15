@@ -12,7 +12,7 @@ setuptools.setup(
     description="ASOS executor plugin for HTTP(s) requests",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/python-asos/asos-curl/",
+    url="https://github.com/python-asos/",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
