@@ -10,21 +10,29 @@ class Executor():
         if task['task_type'] != 'curl':
             raise Exception("Task type not supported")
 
-        request_type = task['request_type'].lower()
-        request_function = getattr(requests, request_type)
-        logging.debug("Request type: %s" % request_type)
+        if 'method' in task:
+            method = task['method'].lower()
+        else:
+            method = task['request_type'].lower()
+
+        request_function = getattr(requests, method)
+        logging.debug("Request type: %s" % method)
+
+        params = {}
+        data = {}
+        no_dump = True
 
         if 'get_params' in task:
             params = task['get_params']
             logging.debug("Request GET params: %s" % params)
-        else:
-            params = {}
 
         if 'post_data' in task:
             data = task['post_data']
             logging.debug("Request POST data: %s" % data)
-        else:
-            data = {}
+
+        if 'no_dump' in task:
+            logging.debug("Not dumping the output")
+            no_dump = True
 
         _start = time.time()
         _timestamp = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
@@ -45,11 +53,13 @@ class Executor():
             "time_spent": time_spent,
             "_start": _start,
             "_finish": _finish,
-            "response": {
+        }
+
+        if not no_dump:
+            report["response"] = {
                 "text": response.text,
                 "code": response.status_code,
             }
-        }
 
         return time_spent, json.dumps(report)
 
