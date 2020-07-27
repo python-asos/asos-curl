@@ -13,7 +13,7 @@ class Executor():
         if 'method' in task:
             method = task['method'].lower()
         else:
-            method = task['request_type'].lower()
+            method = 'get'
 
         request_function = getattr(requests, method)
         logging.debug("Request type: %s" % method)
